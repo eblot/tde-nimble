@@ -26,12 +26,18 @@ IF (DEFINED TRACE_PROBE)
   ADD_DEFINITIONS(-DENABLE_TRACE=1)
 ENDIF ()
 
-find_subprojects (SUBPROJECTS apps docs)
+find_subprojects (SUBPROJECTS docs)
 
 #------------------------------------------------------------------------------
 # Disable many warnings while building Nordic Semi code
 #------------------------------------------------------------------------------
 MACRO (nrf52_no_warnings)
+  ADD_DEFINITIONS(-Wno-documentation)
+  ADD_DEFINITIONS(-Wno-documentation-unknown-command)
+  ADD_DEFINITIONS(-Wno-sign-conversion)
+  ADD_DEFINITIONS(-Wno-implicit-int-conversion)
+  ADD_DEFINITIONS(-Wno-missing-prototypes)
+  ADD_DEFINITIONS(-Wno-vla)
 ENDMACRO ()
 
 #------------------------------------------------------------------------------
@@ -40,8 +46,8 @@ ENDMACRO ()
 MACRO (use_sdk_headers)
   SET (inc_dirs)
   FOREACH (header ${ARGV})
-    assert_directory ("Component" ${CMAKE_SOURCE_DIR}/sdk/${header})
-    LIST (APPEND inc_dirs ${CMAKE_SOURCE_DIR}/sdk/${header})
+    assert_directory ("Component" ${CMAKE_SOURCE_DIR}/${header}/include)
+    LIST (APPEND inc_dirs ${CMAKE_SOURCE_DIR}/${header}/include)
   ENDFOREACH (header)
   INCLUDE_DIRECTORIES (${inc_dirs})
 ENDMACRO ()
@@ -63,10 +69,32 @@ ENDMACRO()
 #------------------------------------------------------------------------------
 
 use_sdk_headers(
+  nimble/common
+  porting/nimble
+  porting/npl/dummy
 )
 
-SET (NRF52_SYSLIBS)
-LIST (APPEND NRF52_SYSLIBS )
+SET (NIMBLE_SYSLIBS)
+LIST (APPEND NIMBLE_SYSLIBS
+      ans
+      bas
+      bleuart
+      common
+      controller
+      dis
+      gap
+      gatt
+      host
+      ias
+      ipss
+      lls
+      nimble
+      nrf52
+      ram
+      store
+      tinycrypt
+      tps
+      uart)
 
 # build all projects
 FOREACH (project ${SUBPROJECTS})

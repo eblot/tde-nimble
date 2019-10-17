@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (SUBPROJECTS native)
+find_subprojects (subprojects native)
 
 #-----------------------------------------------------------------------------
 # Build configuration

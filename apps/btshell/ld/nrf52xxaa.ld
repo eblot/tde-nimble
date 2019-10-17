@@ -1,0 +1,7 @@
+MEMORY
+{
+  FLASH (rx) : ORIGIN = 0x00008000, LENGTH = 0x3a000
+  RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 0x10000
+}
+
+_imghdr_size = 0x20;

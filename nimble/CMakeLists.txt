@@ -18,7 +18,7 @@ ADD_DEFINITIONS(-DBLE_EXT_ADV_MAX_SIZE=31)
 ADD_DEFINITIONS(-DBLE_VERSION=50)
 
 # define subprojects
-find_subprojects (SUBPROJECTS include src)
+find_subprojects (subprojects)
 
 #-----------------------------------------------------------------------------
 # Build configuration
@@ -30,8 +30,3 @@ nrf52_no_warnings ()
 FOREACH (project ${subprojects})
   ADD_SUBDIRECTORY (${project} ${project})
 ENDFOREACH ()
-
-
-build_component_from (
-  src/ble_util.c
-)

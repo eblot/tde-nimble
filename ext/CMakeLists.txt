@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (SUBPROJECTS)
+find_subprojects (subprojects)
 
 #-----------------------------------------------------------------------------
 # Build configuration

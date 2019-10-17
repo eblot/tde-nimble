@@ -96,7 +96,7 @@ ADD_DEFINITIONS(-DBLE_HS_LOG_LVL=1)
 
 
 # define subprojects
-find_subprojects (SUBPROJECTS include src mesh pts tools test)
+find_subprojects (subprojects include src mesh pts tools test)
 
 #-----------------------------------------------------------------------------
 # Build configuration
@@ -153,5 +153,5 @@ build_component_from (
   src/ble_store.c
   src/ble_store_util.c
   src/ble_uuid.c
-  utils/src/addr.c
+  util/src/addr.c
 )

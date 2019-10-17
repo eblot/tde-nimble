@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (SUBPROJECTS emspi socket)
+find_subprojects (subprojects emspi socket)
 
 #-----------------------------------------------------------------------------
 # Build configuration

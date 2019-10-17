@@ -1,11 +1,11 @@
 #-----------------------------------------------------------------------------
-# NimBLE porting layer
+# NimBLE applications
 #
 # @file CMakeLists.txt
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (subprojects examples)
+find_subprojects (subprojects)
 
 #-----------------------------------------------------------------------------
 # Build configuration
