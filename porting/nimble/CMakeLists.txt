@@ -4,7 +4,7 @@
 # @file CMakeLists.txt
 #-----------------------------------------------------------------------------
 
-ADD_DEFINITIONS(-DNIMBLE_CFG_CONTROLLER=1)
+ADD_DEFINITIONS (-DNIMBLE_CFG_CONTROLLER=1)
 
 build_component_from (
   src/endian.c

@@ -11,7 +11,7 @@ find_subprojects (subprojects native nrf52)
 # Build configuration
 #-----------------------------------------------------------------------------
 
-nrf52_no_warnings ()
+newt_no_warnings ()
 
 # build all projects
 FOREACH (project ${subprojects})
