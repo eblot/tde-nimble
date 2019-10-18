@@ -38,6 +38,22 @@ MACRO (nrf52_no_warnings)
   ADD_DEFINITIONS(-Wno-implicit-int-conversion)
   ADD_DEFINITIONS(-Wno-missing-prototypes)
   ADD_DEFINITIONS(-Wno-vla)
+  ADD_DEFINITIONS(-Wno-unused-parameter)
+  ADD_DEFINITIONS(-Wno-zero-length-array)
+  ADD_DEFINITIONS(-Wno-cast-align)  # BEWARE !!
+  ADD_DEFINITIONS(-Wno-packed)
+  ADD_DEFINITIONS(-Wno-conditional-uninitialized)
+  ADD_DEFINITIONS(-Wno-unreachable-code)
+  ADD_DEFINITIONS(-Wno-shadow)
+  ADD_DEFINITIONS(-Wno-variadic-macros)
+  ADD_DEFINITIONS(-Wno-missing-noreturn)
+  ADD_DEFINITIONS(-Wno-sign-compare)
+  ADD_DEFINITIONS(-Wno-unreachable-code-return)
+  ADD_DEFINITIONS(-Wno-macro-redefined)
+  ADD_DEFINITIONS(-Wno-pointer-sign)
+  ADD_DEFINITIONS(-Wno-pointer-arith)
+  ADD_DEFINITIONS(-Wno-float-conversion)
+  ADD_DEFINITIONS(-Wno-shorten-64-to-32)
 ENDMACRO ()
 
 #------------------------------------------------------------------------------
@@ -56,6 +72,7 @@ ENDMACRO ()
 # Select nrf52832 target
 #------------------------------------------------------------------------------
 MACRO (use_nrf52832)
+  ADD_DEFINITIONS(-DOS_CPUTIME_FREQ=32768)
 ENDMACRO()
 
 #------------------------------------------------------------------------------
@@ -68,11 +85,16 @@ ENDMACRO()
 # Build configuration
 #------------------------------------------------------------------------------
 
-use_sdk_headers(
+use_sdk_headers (
   nimble/common
+  nimble/drivers/nrf52
+  nimble/controller
   porting/nimble
   porting/npl/dummy
+  ext/tinycrypt
 )
+
+use_nrf52832 ()
 
 SET (NIMBLE_SYSLIBS)
 LIST (APPEND NIMBLE_SYSLIBS

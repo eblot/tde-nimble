@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (subprojects)
+find_subprojects (subprojects bleuart)
 
 #-----------------------------------------------------------------------------
 # Build configuration
