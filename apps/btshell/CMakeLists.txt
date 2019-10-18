@@ -13,6 +13,13 @@ GET_FILENAME_COMPONENT (COMPONENT ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 use_newlib ()
 
+use_sdk_headers (
+  nimble/host/services/gap
+  nimble/host/services/gatt
+  core/sys/shell
+  core/util/streamer
+)
+
 tag_application (${COMPONENT} ${CMAKE_SOURCE_DIR})
 
 INCLUDE_DIRECTORIES(include
@@ -24,13 +31,28 @@ IF (DEFINED XTCHECK)
   SET (CMAKE_C_CLANG_TIDY ${ctidy})
 ENDIF ()
 
+ADD_DEFINITIONS(-DBTSHELL_ANS=1)
+ADD_DEFINITIONS(-DSHELL_TASK=1)
+ADD_DEFINITIONS(-DLOG_LEVEL=1)
+ADD_DEFINITIONS(-DBLE_SM_LEGACY=0)
+ADD_DEFINITIONS(-DBLE_SM_SC=0)
+ADD_DEFINITIONS(-DOS_MAIN_STACK_SIZE=512)
+ADD_DEFINITIONS(-DSHELL_MGMT=0)
+ADD_DEFINITIONS(-DMSYS_1_BLOCK_COUNT=16)
+ADD_DEFINITIONS(-DMYNEWT_VAL_MSYS_1_BLOCK_SIZE=MSYS_1_BLOCK_SIZE)
+
 ADD_EXECUTABLE (${COMPONENT}
+                src/cmd.c
+                src/cmd_gatt.c
+                src/cmd_l2cap.c
+                src/gatt_svr.c
+                src/main.c
+                src/misc.c
+                src/parse.c
                 ${CMAKE_CURRENT_BINARY_DIR}/${TAGFILE_SRC})
 ADD_DEFINITIONS (-DAPP_NAME=${COMPONENT})
-ADD_FILE_DEPENDENCIES (src/pa_main.c
+ADD_FILE_DEPENDENCIES (src/main.c
                        ${CMAKE_CURRENT_BINARY_DIR}/${TAGFILE_HEADER})
-ADD_FILE_DEPENDENCIES (src/pa_pwr.c
-                       ${CMAKE_CURRENT_SOURCE_DIR}/src/pa_pwr.sm)
 
 GET_TARGET_PROPERTY (sources ${COMPONENT} SOURCES)
 FOREACH (src ${sources})

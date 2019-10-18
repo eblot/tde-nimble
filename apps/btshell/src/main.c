@@ -55,6 +55,9 @@
 #include "../src/ble_hs_atomic_priv.h"
 #include "../src/ble_hs_priv.h"
 
+// what a great idea to use such a common C preprocessor flags in MODLOG macro!
+#undef DEBUG
+
 #if MYNEWT_VAL(BLE_ROLE_CENTRAL)
 #define BTSHELL_MAX_SVCS               32
 #define BTSHELL_MAX_CHRS               64

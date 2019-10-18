@@ -59,6 +59,8 @@ MACRO (newt_no_warnings)
   ADD_DEFINITIONS (-Wno-switch-enum)
   ADD_DEFINITIONS (-Wno-uninitialized)
   ADD_DEFINITIONS (-Wno-unused-variable)
+  ADD_DEFINITIONS (-Wno-missing-field-initializers)
+  ADD_DEFINITIONS (-Wno-char-subscripts)
 ENDMACRO ()
 
 # + invalid use of __...H__
@@ -96,10 +98,13 @@ ENDMACRO()
 #------------------------------------------------------------------------------
 
 use_sdk_headers (
+  core/encoding/base64
   core/kernel/os
+  core/hw/bsp/nordic_pca10040
   core/hw/hal
   core/hw/mcu
   core/hw/mcu/nrf52xxx
+  core/sys/config
   core/sys/defs
   core/sys/log/common
   core/sys/log/modlog
@@ -119,6 +124,9 @@ use_sdk_headers (
 
 use_nrf52832 ()
 
+
+ADD_DEFINITIONS(-DMYNEWT=1 -DFORCE_MYNEWT=1)
+
 SET (NIMBLE_SYSLIBS)
 LIST (APPEND NIMBLE_SYSLIBS
   ans
@@ -133,7 +141,6 @@ LIST (APPEND NIMBLE_SYSLIBS
   ias
   ipss
   lls
-  nimble
   nrf52
   ram
   store

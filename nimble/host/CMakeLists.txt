@@ -96,7 +96,7 @@ ADD_DEFINITIONS (-DBLE_HS_LOG_LVL=1)
 
 
 # define subprojects
-find_subprojects (subprojects include src mesh pts tools test store)
+find_subprojects (subprojects include src mesh pts tools test)
 
 #-----------------------------------------------------------------------------
 # Build configuration

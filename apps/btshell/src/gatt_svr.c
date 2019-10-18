@@ -26,6 +26,9 @@
 #include "host/ble_gatt.h"
 #include "btshell.h"
 
+// what a great idea to use such a common C preprocessor flags in MODLOG macro!
+#undef DEBUG
+
 /* 0000xxxx-8c26-476f-89a7-a108033a69c7 */
 #define PTS_UUID_DECLARE(uuid16)                                \
     ((const ble_uuid_t *) (&(ble_uuid128_t) BLE_UUID128_INIT(   \

@@ -34,7 +34,7 @@ struct os_mbuf;
 /* Logging macros are generated automatically for Mynewt.  Define them here for
  * other OSes.
  */
-#if !MYNEWT
+#if FORCE_MYNEWT || !MYNEWT
 
 #define BLE_HS_LOG_DEBUG(...) MODLOG_DEBUG(LOG_MODULE_NIMBLE_HOST, __VA_ARGS__)
 #define BLE_HS_LOG_INFO(...)  MODLOG_INFO(LOG_MODULE_NIMBLE_HOST, __VA_ARGS__)

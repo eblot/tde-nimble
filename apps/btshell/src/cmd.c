@@ -3148,6 +3148,7 @@ static const struct shell_cmd_help phy_read_help = {
     .usage = NULL,
     .params = phy_read_params,
 };
+#endif
 
 /*****************************************************************************
  * $host-enable                                                              *
@@ -3215,6 +3216,7 @@ static const struct shell_cmd_help host_disable_help = {
 /*****************************************************************************
  * $gatt-discover                                                            *
  *****************************************************************************/
+#if MYNEWT_VAL(SHELL_CMD_HELP)
 
 static const struct shell_param gatt_discover_characteristic_params[] = {
     {"conn", "connection handle, usage: =<UINT16>"},

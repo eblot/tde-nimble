@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (subprojects native nrf52)
+find_subprojects (subprojects native)
 
 #-----------------------------------------------------------------------------
 # Build configuration

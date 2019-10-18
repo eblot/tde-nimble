@@ -26,7 +26,7 @@
 #include "sysinit/sysinit.h"
 #include "syscfg/syscfg.h"
 #include "os/os_cputime.h"
-// #include "bsp/bsp.h"
+#include "bsp/bsp.h"
 #include "os/os.h"
 #include "mem/mem.h"
 #include "hal/hal_gpio.h"
