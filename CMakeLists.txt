@@ -26,8 +26,6 @@ IF (DEFINED TRACE_PROBE)
   ADD_DEFINITIONS (-DENABLE_TRACE=1)
 ENDIF ()
 
-find_subprojects (SUBPROJECTS docs porting)
-
 #------------------------------------------------------------------------------
 # Disable many warnings while building Nordic Semi code
 #------------------------------------------------------------------------------
@@ -124,29 +122,38 @@ use_sdk_headers (
 
 use_nrf52832 ()
 
-
-ADD_DEFINITIONS(-DMYNEWT=1 -DFORCE_MYNEWT=1)
+ADD_DEFINITIONS (-DMYNEWT=1 -DFORCE_MYNEWT=1)
 
 SET (NIMBLE_SYSLIBS)
 LIST (APPEND NIMBLE_SYSLIBS
   ans
   bas
   bleuart
+  bsp
+  cmsis-core
   common
   controller
   dis
+  drivers
   gap
   gatt
+  hal
   host
   ias
   ipss
   lls
+  mcu
   nrf52
+  nrfx
+  os
   ram
   store
+  sys
   tinycrypt
   tps
   uart)
+
+find_subprojects (SUBPROJECTS docs porting)
 
 # build all projects
 FOREACH (project ${SUBPROJECTS})

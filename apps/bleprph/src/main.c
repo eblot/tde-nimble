@@ -344,7 +344,8 @@ main(void)
         void *entry;
         rc = split_app_go(&entry, true);
         if (rc == 0) {
-            hal_system_start(entry);
+            hal_system_start(((const uint32_t *)img_start)[0]
+                             ((const uint32_t *)img_start)[1]);
         }
     }
 #endif

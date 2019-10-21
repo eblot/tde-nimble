@@ -120,11 +120,11 @@ build_component_from (
   src/ble_att_clt.c
   src/ble_att_cmd.c
   src/ble_att_svr.c
-  src/ble_eddystone.c
+  # src/ble_eddystone.c
   src/ble_gap.c
   src/ble_gattc.c
   src/ble_gatts.c
-  # src/ble_gatts_lcl.c
+  src/ble_gatts_lcl.c
   src/ble_hs.c
   src/ble_hs_adv.c
   src/ble_hs_atomic.c
@@ -145,7 +145,7 @@ build_component_from (
   src/ble_hs_shutdown.c
   src/ble_hs_startup.c
   src/ble_hs_stop.c
-  src/ble_ibeacon.c
+  # src/ble_ibeacon.c
   src/ble_l2cap.c
   src/ble_l2cap_coc.c
   src/ble_l2cap_sig.c

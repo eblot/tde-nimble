@@ -12,7 +12,8 @@
  * attempt to use these macros without including this header will result in a
  * compiler error.
  */
-#define MYNEWT_VAL(x)                            x
+#define MYNEWT_VAL(_val_)            (_val_)
+#define MYNEWT_VAL_CHOICE(_x_, _y_)  ((_x_) == (_y_))
 
 /*** compiler/arm-none-eabi-m4 */
 #ifndef HARDFLOAT
