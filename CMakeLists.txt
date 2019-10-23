@@ -26,6 +26,24 @@ IF (DEFINED TRACE_PROBE)
   ADD_DEFINITIONS (-DENABLE_TRACE=1)
 ENDIF ()
 
+ADD_DEFINITIONS(-DCRYPTO_NEED_CBC=1)
+ADD_DEFINITIONS(-DCRYPTO_NEED_CTR=1)
+ADD_DEFINITIONS(-DCRYPTO_HW_AES_CBC=0)
+ADD_DEFINITIONS(-DCRYPTO_HW_AES_CTR=0)
+
+ADD_DEFINITIONS(-DDEBOUNCE_PARAM_TICKS=1)
+ADD_DEFINITIONS(-DDEBOUNCE_PARAM_COUNT=10)
+
+ADD_DEFINITIONS(-DRTT=0)
+
+ADD_DEFINITIONS(-DRTT_NUM_BUFFERS_UP=0)
+ADD_DEFINITIONS(-DRTT_NUM_BUFFERS_DOWN=0)
+
+ADD_DEFINITIONS(-DRTT_TERMINAL_BUFFER_SIZE_UP=1024)
+ADD_DEFINITIONS(-DRTT_TERMINAL_BUFFER_SIZE_DOWN=16)
+
+ADD_DEFINITIONS(-DNRF52_TRNG_CACHE_LEN=32)
+
 ADD_DEFINITIONS (-DOS_MAIN_TASK_PRIO=127)
 ADD_DEFINITIONS (-DOS_MAIN_STACK_SIZE=1024)
 ADD_DEFINITIONS (-DOS_CLI=0)
@@ -188,8 +206,9 @@ ENDMACRO ()
 #------------------------------------------------------------------------------
 MACRO (use_nrf52832)
   ADD_DEFINITIONS (-DNRF52 -DOS_CPUTIME_FREQ=32768)
-  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/core/hw/nrfx
-                      ${CMAKE_SOURCE_DIR}/core/hw/nrfx/mdk
+  INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/core/hw/mcu/nordic/nrf52xxx/nrfx
+                      ${CMAKE_SOURCE_DIR}/core/hw/mcu/nordic/nrf52xxx/nrfx/mdk
+                      ${CMAKE_SOURCE_DIR}/core/hw/mcu/nordic/nrf52xxx/nrfx/hal
                       ${CMAKE_SOURCE_DIR}/core/hw/cmsis-core/src/ext)
 ENDMACRO()
 
@@ -208,8 +227,8 @@ use_sdk_headers (
   core/kernel/os
   core/hw/bsp/nordic_pca10040
   core/hw/hal
-  core/hw/mcu
-  core/hw/mcu/nrf52xxx
+  core/hw/mcu/nordic
+  core/hw/mcu/nordic/nrf52xxx
   core/sys/config
   core/sys/defs
   core/sys/log/common
@@ -251,9 +270,8 @@ LIST (APPEND NIMBLE_SYSLIBS
   ias
   ipss
   lls
-  mcu
   nrf52
-  nrfx
+  nrf52xxx
   os
   ram
   store
