@@ -49,6 +49,7 @@ ADD_EXECUTABLE (${COMPONENT}
                 src/main.c
                 src/misc.c
                 src/parse.c
+                src/sysinit_app.c
                 ${CMAKE_CURRENT_BINARY_DIR}/${TAGFILE_SRC})
 ADD_DEFINITIONS (-DAPP_NAME=${COMPONENT})
 ADD_FILE_DEPENDENCIES (src/main.c
@@ -73,12 +74,4 @@ link_app (${COMPONENT}
           LINK_SCRIPT ${CMAKE_SOURCE_DIR}/core/hw/bsp/nordic_pca10040/nordic_pca10040_no_boot.ld
           LINK_SCRIPT_DIR ${CMAKE_SOURCE_DIR}/sdk/nrfx/mdk)
 
-post_gen_app (${COMPONENT} ASM)
-
-SET (elffile ${CMAKE_CURRENT_BINARY_DIR}/${COMPONENT}${CMAKE_EXECUTABLE_SUFFIX})
-ADD_CUSTOM_COMMAND (TARGET ${COMPONENT} POST_BUILD
-                    COMMAND ${nrfhex}
-                        -s ${CMAKE_SOURCE_DIR}/sdk/${NIMBLE_SD}
-                        -e ${elffile}
-                        -o ${CMAKE_CURRENT_BINARY_DIR}
-                    COMMENT "Generating HEX flash file" VERBATIM)
+post_gen_app (${COMPONENT} ASM SREC SIZE)

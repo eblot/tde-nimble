@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------------
 
 # define subprojects
-find_subprojects (subprojects emspi socket)
+find_subprojects (subprojects emspi socket uart)
 
 #-----------------------------------------------------------------------------
 # Build configuration

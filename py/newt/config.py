@@ -4,6 +4,7 @@ from logging import getLogger
 from os import environ, rename, walk
 from os.path import (basename, dirname, isdir, join as joinpath, normpath,
                      relpath)
+from pprint import pformat
 from re import compile as recompile
 from typing import Mapping, TextIO
 from ruamel.yaml import YAMLObject, load_all as yaml_load
@@ -26,7 +27,10 @@ class NewtConfigParser:
         self.log = getLogger('tde.newt.config')
         self._debug = debug
         self._syscfgs = {}
+        self._pkgs = {}
         self._syscfg = {}
+        self._defs = {}
+        self._inits = []
 
     def scan(self, topdir: str) -> None:
         if not isdir(topdir):
@@ -37,57 +41,97 @@ class NewtConfigParser:
                 if not fn.endswith('.yml'):
                     continue
                 filename = normpath(joinpath(dirpath, fn))
-                #if fn == 'syscfg.yml':
-                #    with open(filename, 'rt') as yfp:
-                #        self._parse_syscfg(yfp)
+                if fn == 'syscfg.yml':
+                    with open(filename, 'rt') as yfp:
+                        self._syscfgs.update(self._parse(yfp))
                 if fn == 'pkg.yml':
                     with open(filename, 'rt') as yfp:
-                        self._parse_pkg(yfp)
-        self._syscfg = self._build_syscfg(self._syscfgs)
-        from pprint import pprint
-        pprint(self._syscfg)
+                        self._pkgs.update(self._parse(yfp))
+        self._build_syscfg()
+        self._build_pkg()
 
-    def _parse_pkg(self, yamlfp: TextIO) -> None:
+    def _parse(self, yamlfp: TextIO) -> dict:
         ydefs = yaml_load(yamlfp, Loader=Loader)
         modname = dirname(yamlfp.name)
-        try:
-            for ydef in ydefs:
-                if not isinstance(ydef, dict):
-                    raise NewtError(f'Unexpected config format in '
-                                    f'{yamlfp.name}')
-                print(ydef)
-        except (ParserError, ConstructorError) as exc:
-            raise NewtError(f'Invalid configuration: {exc}')
-
-    def _parse_syscfg(self, yamlfp: TextIO) -> None:
-        ydefs = yaml_load(yamlfp, Loader=Loader)
-        modname = dirname(yamlfp.name)
+        contents = {}
         try:
             for ydef in ydefs:
                 if not isinstance(ydef, dict):
                     raise NewtError(f'Unexpected config format in '
                                     f'{yamlfp.name}')
                 top = {}
+                prev = []
                 for ykey, yval in ydef.items():
                     source = top
                     while True:
                         kparts = ykey.split('.', 1)
                         if len(kparts) == 1:
+                            if not isinstance(source, dict) and prev:
+                                source = prev[0][prev[1]] = \
+                                    {'': prev[0][prev[1]]}
                             source[ykey] = yval
                             break
                         if kparts[0] not in source:
                             source[kparts[0]] = {}
+                        prev = source, kparts[0]
                         source, ykey = source[kparts[0]], kparts[1]
-                self._syscfgs[modname] = top
+                contents[modname] = top
+            return contents
         except (ParserError, ConstructorError) as exc:
             raise NewtError(f'Invalid configuration: {exc}')
 
-    def _build_syscfg(self, configs):
+    def _build_pkg(self):
+        inits = self._get(self._build(self._pkgs), 'pkg.init')
+        cinits = {}
+        for name, value in inits.items():
+            if isinstance(value, dict):
+                continue
+            cinits[name] = self._resolve(value)
+        self._inits.clear()
+        for func in sorted(cinits, key=lambda f: cinits[f]):
+            self._inits.append(func)
+        print('void sysinit_app(void);')
+        print()
+        for func in self._inits:
+            print(f'void {func}(void);')
+        print()
+        print('void sysinit_app(void)')
+        print('{')
+        for func in self._inits:
+            print(f'   {func}();')
+        print('}')
+
+    def _build_syscfg(self):
+        self._syscfg = self._build(self._syscfgs, 'deprecated')
+        self._defs = self._get(self._syscfg, 'syscfg.defs')
+
+    @classmethod
+    def _get(cls, items, path):
+        for pth in path.split('.'):
+            try:
+                items = items[pth]
+            except KeyError:
+                return {}
+        return items
+
+    def _resolve(self, name):
+        value = self._defs
+        while isinstance(value, dict):
+            if name not in value:
+                break
+            name = value[name]
+            if isinstance(name, (list, dict)):
+                self.log.warning('Cannot resolve %s', name.__class__.__name__)
+                break
+        return name
+
+    def _build(self, items, *keywords):
         def cleanup(obj):
             if not isinstance(obj, dict):
                 return obj
-            if 'deprecated' in obj:
-                return None
+            for keyword in keywords:
+                if keyword in obj:
+                    return None
             cobj = {}
             for okey, oval in obj.items():
                 if okey in {'description', }:
@@ -100,14 +144,13 @@ class NewtConfigParser:
                         value = value.pop('value')
                     if isinstance(value, str) and value:
                         value = self.NEWT_CRE.sub(r'\3', value)
-                        # print(value)
                     cobj[okey] = value
             return cobj
-        cfg = {}
-        for val in configs.values():
+        output = {}
+        for val in items.values():
             val = cleanup(val)
-            cfg = self.merge_containers(cfg, val, True)
-        return cfg
+            output = self.merge_containers(output, val, True)
+        return output
 
     def merge_containers(self, obj_a, obj_b, ignore_error: bool = False):
         """Recursively merge dictionaries.
